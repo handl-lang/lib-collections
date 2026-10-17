@@ -1,0 +1,1 @@
+{ modules: ["vec", "list", "queue", "stack", "deque", "hash_map", "hash_set", "array"] }
