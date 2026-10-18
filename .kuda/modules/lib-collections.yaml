@@ -1,0 +1,397 @@
+name: lib-collections
+path: src/lib.rs
+purpose: lib-collections
+api:
+- name: ROOT
+  kind: const
+  file: src/lib.rs
+  line: 12
+  module: lib-collections
+- name: ARRAY__REFLECT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 14
+  module: lib-collections
+- name: ARRAY_AT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 15
+  module: lib-collections
+- name: ARRAY_CHUNK_HNL
+  kind: const
+  file: src/lib.rs
+  line: 16
+  module: lib-collections
+- name: ARRAY_COMPACT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 17
+  module: lib-collections
+- name: ARRAY_CONCAT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 18
+  module: lib-collections
+- name: ARRAY_CONTAINS_HNL
+  kind: const
+  file: src/lib.rs
+  line: 19
+  module: lib-collections
+- name: ARRAY_DEDUPE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 20
+  module: lib-collections
+- name: ARRAY_DEEP_FLATTEN_HNL
+  kind: const
+  file: src/lib.rs
+  line: 21
+  module: lib-collections
+- name: ARRAY_DROP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 22
+  module: lib-collections
+- name: ARRAY_ENUMERATE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 23
+  module: lib-collections
+- name: ARRAY_FILL_HNL
+  kind: const
+  file: src/lib.rs
+  line: 24
+  module: lib-collections
+- name: ARRAY_FIRST_HNL
+  kind: const
+  file: src/lib.rs
+  line: 25
+  module: lib-collections
+- name: ARRAY_FLATTEN_HNL
+  kind: const
+  file: src/lib.rs
+  line: 26
+  module: lib-collections
+- name: ARRAY_INDEX_HNL
+  kind: const
+  file: src/lib.rs
+  line: 27
+  module: lib-collections
+- name: ARRAY_INDEX_OF_HNL
+  kind: const
+  file: src/lib.rs
+  line: 28
+  module: lib-collections
+- name: ARRAY_INSERT_AT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 29
+  module: lib-collections
+- name: ARRAY_INTERCALATE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 30
+  module: lib-collections
+- name: ARRAY_INTERSPERSE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 31
+  module: lib-collections
+- name: ARRAY_IS_EMPTY_HNL
+  kind: const
+  file: src/lib.rs
+  line: 32
+  module: lib-collections
+- name: ARRAY_LAST_HNL
+  kind: const
+  file: src/lib.rs
+  line: 33
+  module: lib-collections
+- name: ARRAY_LEN_HNL
+  kind: const
+  file: src/lib.rs
+  line: 34
+  module: lib-collections
+- name: ARRAY_PLUCK_HNL
+  kind: const
+  file: src/lib.rs
+  line: 35
+  module: lib-collections
+- name: ARRAY_POP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 36
+  module: lib-collections
+- name: ARRAY_PREPEND_HNL
+  kind: const
+  file: src/lib.rs
+  line: 37
+  module: lib-collections
+- name: ARRAY_REMOVE_AT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 38
+  module: lib-collections
+- name: ARRAY_REVERSE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 39
+  module: lib-collections
+- name: ARRAY_SHIFT_HNL
+  kind: const
+  file: src/lib.rs
+  line: 40
+  module: lib-collections
+- name: ARRAY_SLICE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 41
+  module: lib-collections
+- name: ARRAY_TAKE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 42
+  module: lib-collections
+- name: ARRAY_TRANSPOSE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 43
+  module: lib-collections
+- name: ARRAY_UNZIP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 44
+  module: lib-collections
+- name: ARRAY_WINDOWS_HNL
+  kind: const
+  file: src/lib.rs
+  line: 45
+  module: lib-collections
+- name: ARRAY_ZIP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 46
+  module: lib-collections
+- name: ARRAY_HNL
+  kind: const
+  file: src/lib.rs
+  line: 47
+  module: lib-collections
+- name: COLLECTIONS_HNL
+  kind: const
+  file: src/lib.rs
+  line: 48
+  module: lib-collections
+- name: DEQUE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 49
+  module: lib-collections
+- name: HASH_MAP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 50
+  module: lib-collections
+- name: HASH_SET_HNL
+  kind: const
+  file: src/lib.rs
+  line: 51
+  module: lib-collections
+- name: LIST_INDEX_HNL
+  kind: const
+  file: src/lib.rs
+  line: 52
+  module: lib-collections
+- name: LIST_IS_EMPTY_HNL
+  kind: const
+  file: src/lib.rs
+  line: 53
+  module: lib-collections
+- name: LIST_LEN_HNL
+  kind: const
+  file: src/lib.rs
+  line: 54
+  module: lib-collections
+- name: LIST_PEEK_HNL
+  kind: const
+  file: src/lib.rs
+  line: 55
+  module: lib-collections
+- name: LIST_POP_HNL
+  kind: const
+  file: src/lib.rs
+  line: 56
+  module: lib-collections
+- name: LIST_PUSH_HNL
+  kind: const
+  file: src/lib.rs
+  line: 57
+  module: lib-collections
+- name: QUEUE_HNL
+  kind: const
+  file: src/lib.rs
+  line: 58
+  module: lib-collections
+- name: STACK_HNL
+  kind: const
+  file: src/lib.rs
+  line: 59
+  module: lib-collections
+- name: VEC_HNL
+  kind: const
+  file: src/lib.rs
+  line: 60
+  module: lib-collections
+deps: []
+notes: ''
+verify:
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+- src/lib.rs
+provenance:
+  files:
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  - src/lib.rs
+  hashes:
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  commit_sha: f5188d0df107a14f02a572686a6a0b93a13a68b3
+  generated_at: '1792281196'
+  generator: kuda-template/0.1.0

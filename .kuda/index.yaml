@@ -1,0 +1,19 @@
+name: lib-collections
+root: /home/luis/GitHub/handl-lang/lib-collections
+purpose: ''
+modules:
+- handl-lib-collections
+- lib-collections
+commands:
+- cargo check
+- cargo test --workspace
+provenance:
+  files:
+  - Cargo.toml
+  - src/lib.rs
+  hashes:
+  - bd39b13fa3a60dd26e79aedd72f916cc43b1182c
+  - 13e1b5708910f7efe22a397e94939a2603a92c78
+  commit_sha: f5188d0df107a14f02a572686a6a0b93a13a68b3
+  generated_at: '1792281196'
+  generator: kuda/0.1.0
