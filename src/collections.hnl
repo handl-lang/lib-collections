@@ -22,10 +22,15 @@
 ---     synthesizes `Vec(?m, a)` with a free meta, so
 ---     `VCons(Zero, true, VNil) : Vec(5, Bool)` typechecks. Write the
 ---     result index explicitly — `VCons(x : a, xs : Vec(n, a)) : Vec(n + 1, a)`.
----   * `append{n, m, a} : Vec{n, a} ~> Vec{m, a} ~> Vec{n + m, a}` FAILS:
----     the VCons arm needs `?k + 1 + m ≡ m + (?k + 1)` and commuted sums
----     with rigid/meta atoms do not canonicalize
----     (`cannot unify — expected Vec(?m9 + 1 + m, ?m0), got Vec(m + ?m9 + 1, ?m11)`).
+---   * FIXED — `append{n, m, a}` now typechecks: commuted sums with
+---     rigid/meta atoms canonicalize (`?k + 1 + m ≡ m + ?k + 1`) —
+---     unsolved metas are honest ring atoms in `poly_of`.
+---   * FIXED — implicit-binder names scope into body annotations:
+---     `(v : Vec(n, a))` under `f{n, a}` reads `n`/`a` as rigid index
+---     vars, not unsolved sort metas.
+---   * FIXED — `F.rec` is visible to the checker: `field_access` on a
+---     `data` family resolves the `<F>.rec` scope binding; the
+---     eliminator checks `motive ~> c0.. ~> indices.. ~> F ~> ?mo`.
 ---   * `zipWith` is a catch-22: the inner `match ys` on `Vec{n, b}` under
 ---     `n ≡ ?k + 1` makes `VNil` decided-impossible for the arm checker
 ---     ("unreachable constructor arm") but decided-possible for the
@@ -40,12 +45,13 @@
 ---     `Vec(m, a)` (bare index names resolve through gamma to their
 ---     sort — only compound terms like `n + 0` stay `var`), so
 ---     `VCons(x, ys) : Vec(m + 1, a)` never unifies with `Vec(Nat, ?m0)`.
----   * `T.rec` — the `data`-generated fold — exists at runtime but is
----     invisible to the checker: `Vec.rec(…)` fails with
----     `record_field_type: type value has no 'fields' object` (the family
----     is a `type.family`, not a record). So `F.rec` folds can't be
----     written in checked code; `match` is the only elimination form.
----   * Recursion typechecks but runs WRONG: `vmap`/`vsum` below check
+---   * `T.rec` — NOW CHECKED (`hnl typecheck` accepts
+---     `Vec.rec(null, 0, step)(2, Bool, v)`); `match` is still the
+---     elimination form used below.
+---   * Recursion typechecks AND runs correctly on the tree-walk
+---     AST-eval path (`vsum` → `Succ` tower; `toNum ∘ vsum → 2`) —
+---     bytecode/cranelift still diverge on self-recursive closures
+---     (remaining issue). Previously it ran WRONG: `vmap`/`vsum` below check
 ---     cleanly and `hnl run` evaluates them — silently producing the
 ---     wrong value (`vmap` returns the input unchanged; `vsum` returns
 ---     `Zero`). `lower_ast` rejects self-recursive calls ("the arrow
