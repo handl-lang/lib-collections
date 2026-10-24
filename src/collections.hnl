@@ -31,20 +31,19 @@
 ---   * FIXED — `F.rec` is visible to the checker: `field_access` on a
 ---     `data` family resolves the `<F>.rec` scope binding; the
 ---     eliminator checks `motive ~> c0.. ~> indices.. ~> F ~> ?mo`.
----   * `zipWith` is a catch-22: the inner `match ys` on `Vec{n, b}` under
----     `n ≡ ?k + 1` makes `VNil` decided-impossible for the arm checker
----     ("unreachable constructor arm") but decided-possible for the
----     coverage pass (`VNil: absurd` → "non-exhaustive — `VNil` can occur
----     but no arm covers it"; `_` catchall → `Vec(0, ?m)` vs `Vec(?k+1, c)`
----     mismatch). No spelling satisfies both judgments.
+---   * FIXED — `zipWith`'s catch-22 is gone: a decided-impossible arm
+---     now *auto-discharges* (coverage never required it, `absurd` not
+---     needed — it stays legal as documentation), so `match ys {
+---     VNil: _, VCons(y, u): … }` under `n ≡ ?k + 1` typechecks.
 ---   * `filter`'s existential output index — no `?m`/`∃` surface:
 ---     `Vec{?m, a}` fails to lex (`unexpected token: token.question`).
----     `Sigma(Nat, m ~> Vec(m, a))` parses as the encoding, but a real
----     recursive filter can't be written: inside a `match`/`Sigma` the
----     destructured length var `m` reads as the *sort* `Nat` in
----     `Vec(m, a)` (bare index names resolve through gamma to their
----     sort — only compound terms like `n + 0` stay `var`), so
----     `VCons(x, ys) : Vec(m + 1, a)` never unifies with `Vec(Nat, ?m0)`.
+---     `Sigma(Nat, m ~> Vec(m, a))` parses as the encoding (used below),
+---     but a real recursive filter can't be written: inside a
+---     `match`/`Sigma` the destructured length var `m` reads as the
+---     *sort* `Nat` in `Vec(m, a)` (bare index names resolve through
+---     gamma to their sort — only compound terms like `n + 0` stay
+---     `var`), so `VCons(x, ys) : Vec(m + 1, a)` never unifies with
+---     `Vec(Nat, ?m0)`. `exists m. T` sugar is BACKLOG'd.
 ---   * `T.rec` — NOW CHECKED (`hnl typecheck` accepts
 ---     `Vec.rec(null, 0, step)(2, Bool, v)`); `match` is still the
 ---     elimination form used below.
@@ -151,12 +150,28 @@ export mget{a} : Maybe(a) ~> a ~> a =
 
 --- `filter` can't name an output length — there is no `?m`/`∃` index
 --- syntax — so the honest return is `Sigma(Nat, m ~> Vec(m, a))`: some
---- `m` with a `Vec(m, a)`. This checks; see the gap log for why the
---- *computing* version (recursing and rebuilding the Sigma) can't yet
---- be expressed — the destructured `m` reads as the `Nat` sort inside
---- `Vec(m, a)`.
-export vfilter{n, a} : (a ~> Bool) ~> Vec{n, a} ~> Sigma(Nat, m ~> Vec(m, a)) =
+--- `m` with a `Vec(m, a)`. The Sigma intro is the `[witness, value]`
+--- pair (`[Zero, VNil]`). The signature checks exactly this way; see
+--- the gap log for why the *computing* version (recursing on `xs` and
+--- repacking `m + 1`) can't yet be expressed — the destructured `m`
+--- reads as the `Nat` sort inside `Vec(m, a)`, so `VCons(x, ys) :
+--- Vec(m + 1, a)` never unifies with `Vec(Nat, ?m)`. Friction noted:
+--- no destructure form keeps `m` an index var.
+export filter{n, a} : (a ~> Bool) ~> Vec{n, a} ~> Sigma(Nat, m ~> Vec(m, a)) =
   f ~> v ~> match v { VNil: [Zero, VNil], VCons(x, xs): [Zero, xs] }
+
+--- Length-agreeing zip. The inner `match ys`'s `VNil` arm is
+--- decided-impossible under the outer `VCons` refinement (`n ≡ ?k + 1`,
+--- `?k` a Nat-sorted meta) — auto-discharged: the body below is
+--- unchecked-but-allowed (`absurd` remains legal documentation).
+--- RUNTIME CAVEAT: same check-vs-run split as `vmap`/`vsum` — the
+--- self-recursive call checks cleanly but the tree-walk eval can't
+--- apply it correctly today.
+export zipWith{n, a, b, c} : (a ~> b ~> c) ~> Vec{n, a} ~> Vec{n, b} ~> Vec{n, c} =
+  f ~> xs ~> ys ~> match xs {
+    VNil: VNil,
+    VCons(x, t): match ys { VNil: VNil, VCons(y, u): VCons(f(x)(y), zipWith(f)(t)(u)) }
+  }
 
 -- ------------------------------------------------------------------------
 -- Evidence — instance resolution in the implicit-binder slot
@@ -203,12 +218,7 @@ export forall_id : Forall(Nat, n ~> Nat) = n ~> n
 --   -- cannot unify — expected Vec(m + ?m9 + 1, ?m11), got Vec(m + ?m9 + 1, ?m11)
 --   -- (with return motive: expected Vec(?m9 + 1 + m, ?m0), got Vec(m + ?m9 + 1, ?m11))
 --
---   zipWith{n, a, b, c} : (a ~> b ~> c) ~> Vec{n, a} ~> Vec{n, b} ~> Vec{n, c} =
---     f ~> xs ~> ys ~> match xs {
---       VNil: VNil,
---       VCons(x, t): match ys { VNil: absurd, VCons(y, u): VCons(f(x)(y), zipWith(f)(t)(u)) }
---     }
---   -- inner VNil is "unreachable arm" when written, "uncovered" when absurd'd.
+--   -- (zipWith now lives above — auto-discharge removed the catch-22.)
 --
 --   filter{a} : (a ~> Bool) ~> Vec{n, a} ~> Vec{?m, a}   -- `?m` doesn't lex
 --   Vec.rec(null, z, s)(n, a, v)                        -- `record_field_type` error
