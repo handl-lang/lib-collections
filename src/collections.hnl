@@ -35,15 +35,12 @@
 ---     now *auto-discharges* (coverage never required it, `absurd` not
 ---     needed — it stays legal as documentation), so `match ys {
 ---     VNil: _, VCons(y, u): … }` under `n ≡ ?k + 1` typechecks.
----   * `filter`'s existential output index — no `?m`/`∃` surface:
----     `Vec<?m, a>` fails to lex (`unexpected token: token.question`).
----     `Sigma(Nat, m ~> Vec(m, a))` parses as the encoding (used below),
----     but a real recursive filter can't be written: inside a
----     `match`/`Sigma` the destructured length var `m` reads as the
----     *sort* `Nat` in `Vec(m, a)` (bare index names resolve through
----     gamma to their sort — only compound terms like `n + 0` stay
----     `var`), so `VCons(x, ys) : Vec(m + 1, a)` never unifies with
----     `Vec(Nat, ?m0)`. `exists m. T` sugar is BACKLOG'd.
+---   * FIXED — `filter`'s existential output index: the Sigma
+---     destructure now binds the witness rigidly (`var{m}` in both
+---     results and Γ), and `unify_index`'s same-op `Bin` congruence
+---     solves `?k + 1 ≡ var{m} + 1` — the recursive repack below
+---     checks. There is still no `?m`/`∃` surface (`Vec<?m, a>`
+---     fails to lex); `exists m. T` sugar remains BACKLOG'd.
 ---   * `T.rec` — NOW CHECKED (`hnl typecheck` accepts
 ---     `Vec.rec(null, 0, step)(2, Bool, v)`); `match` is still the
 ---     elimination form used below.
@@ -151,14 +148,17 @@ export mget<a> : Maybe(a) ~> a ~> a =
 --- `filter` can't name an output length — there is no `?m`/`∃` index
 --- syntax — so the honest return is `Sigma(Nat, m ~> Vec(m, a))`: some
 --- `m` with a `Vec(m, a)`. The Sigma intro is the `[witness, value]`
---- pair (`[Zero, VNil]`). The signature checks exactly this way; see
---- the gap log for why the *computing* version (recursing on `xs` and
---- repacking `m + 1`) can't yet be expressed — the destructured `m`
---- reads as the `Nat` sort inside `Vec(m, a)`, so `VCons(x, ys) :
---- Vec(m + 1, a)` never unifies with `Vec(Nat, ?m)`. Friction noted:
---- no destructure form keeps `m` an index var.
+--- pair (`[Zero, VNil]`); the eliminator `match s { [m, ys]: … }`
+--- binds `m` as a rigid index var (`var{m}`) and `ys` at
+--- `Vec(var{m}, a)`, so the repack `[Succ(m), VCons(x, ys)]` solves
+--- `?k := var{m}` in `Vec(?k + 1, a) ≡ Vec(m + 1, a)`.
 export filter<n, a> : (a ~> Bool) ~> Vec<n, a> ~> Sigma(Nat, m ~> Vec(m, a)) =
-  f ~> v ~> match v { VNil: [Zero, VNil], VCons(x, xs): [Zero, xs] }
+  f ~> v ~> match v {
+    VNil: [Zero, VNil],
+    VCons(x, xs): match filter(f)(xs) {
+      [m, ys]: if f(x) { [Succ(m), VCons(x, ys)] } else { [m, ys] }
+    }
+  }
 
 --- Length-agreeing zip. The inner `match ys`'s `VNil` arm is
 --- decided-impossible under the outer `VCons` refinement (`n ≡ ?k + 1`,
