@@ -75,16 +75,28 @@
 -- Types
 -- ------------------------------------------------------------------------
 
-data Maybe(a) :: Nothing | Just(x : a)
+Maybe<a> := {
+  Nothing : Maybe,
+  Just : (x : a) ~> Maybe
+}
 
-data Nat :: Zero | Succ(pred : Nat)
+Nat := {
+  Zero : Nat,
+  Succ : (pred : Nat) ~> Nat
+}
 
 --- The length index is a Nat *sort* (literal/arithmetized) — `Succ`-form
 --- indices (`Vec<Succ n, a>`) read through the WS-D ctor-projection
 --- bridge and are definitionally `n + 1`.
-data Vec(n : Nat, a : Type) :: VNil : Vec(0, a) | VCons(x : a, xs : Vec(n, a)) : Vec(n + 1, a)
+Vec<n : Nat, a : Type> := {
+  VNil : Vec(0, a),
+  VCons : (x : a, xs : Vec(n, a)) ~> Vec(n + 1, a)
+}
 
-data List(a : Type) :: LNil | LCons(h : a, t : List(a))
+List<a : Type> := {
+  LNil : List,
+  LCons : (h : a, t : List(a)) ~> List
+}
 
 --- A small typeclass-shaped former + instance (WS-A): `Eq(a)` is a
 --- nominal former; `instance Eq(Nat) := <dict>` registers a dictionary,
@@ -93,7 +105,9 @@ data List(a : Type) :: LNil | LCons(h : a, t : List(a))
 --- dictionary — `ev.eq` field access does NOT typecheck (the binder's
 --- type is the `Eq(a)` former-app, not a record — `record_field_type`
 --- error), so `match ev { mkEq(f): … }` is the call convention.
-data Eq(a : Type) :: mkEq(f : a ~> a ~> Bool)
+Eq<a : Type> := {
+  mkEq : (f : a ~> a ~> Bool) ~> Eq
+}
 
 instance Eq(Nat) := { eq: (x, y) ~> x == y }
 
