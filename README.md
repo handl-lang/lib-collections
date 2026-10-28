@@ -9,3 +9,7 @@ from disk, so the tree must exist verbatim. Consumers read it through
 `handl_lib_collections::ROOT`.
 
 Moved from `stdlib/handl-packages/collections/` (ADR-0128).
+
+## License
+
+MIT.
