@@ -8,7 +8,20 @@ uses path-relative imports (`from "./at" export at`) that the loader resolves
 from disk, so the tree must exist verbatim. Consumers read it through
 `handl_lib_collections::ROOT`.
 
-Moved from `stdlib/handl-packages/collections/` (ADR-0128).
+## Layout
+
+```text
+src/                     the .hnl source tree plus the const crate
+pkg.hnl                  package manifest
+scripts/hnl-gate.sh      the gate
+ci.sh                    bupha entry
+```
+
+## Gate
+
+```bash
+HNL=../host-cli/target/debug/hnl scripts/hnl-gate.sh
+```
 
 ## License
 

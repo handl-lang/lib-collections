@@ -1,1 +1,8 @@
-{ modules: ["vec", "list", "queue", "stack", "deque", "hash_map", "hash_set", "array"] }
+{
+  modules: ["vec", "list", "queue", "stack", "deque", "hash_map", "hash_set", "array"],
+  name: "collections",
+  description: "Collection package tree — vec, list, queue, stack, deque, hash_map, hash_set, array — shipped as sources.",
+  license: "MIT",
+  keywords: ["collections", "vec", "hash-map", "stdlib"],
+  homepage: "https://github.com/handl-lang/lib-collections",
+}
