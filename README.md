@@ -5,13 +5,15 @@
 
 Unlike the other ports this one is not a single `index.hnl`: `array/index.hnl`
 uses path-relative imports (`from "./at" export at`) that the loader resolves
-from disk, so the tree must exist verbatim. Consumers read it through
-`handl_lib_collections::ROOT`.
+from disk, so the tree must exist verbatim. Consumers vendor `pkg.hnl` +
+`src/**/*.hnl` via `handl-pkg-vendor` into `OUT_DIR` (`plugin-lib-stdlib`,
+`handl-runtime`, `plugin-ext-refinement` do this) and load the files from the
+vendored path — the `handl-lib-collections` const crate is retired.
 
 ## Layout
 
 ```text
-src/                     the .hnl source tree plus the const crate
+src/                     the .hnl source tree
 pkg.hnl                  package manifest
 scripts/hnl-gate.sh      the gate
 ci.sh                    bupha entry
