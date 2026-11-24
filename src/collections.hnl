@@ -116,7 +116,7 @@ instance Eq(Nat) := { eq: (x, y) ~> x == y }
 -- ------------------------------------------------------------------------
 
 --- A one-element vector. `1` in the index is the literal Nat sort.
-export vsingleton<a> : a ~> Vec<1, a> = x ~> VCons(x, VNil)
+export vsingleton<a> : a ~> Vec<1, a> := x ~> VCons(x, VNil)
 
 --- `head` is total on non-empty vectors: `Vec<Succ n, a>` is
 --- definitionally `Vec<n + 1, a>` (WS-D bridge), so the VCons-only
@@ -124,9 +124,9 @@ export vsingleton<a> : a ~> Vec<1, a> = x ~> VCons(x, VNil)
 --- `VNil` arm is rejected as decided-unreachable (or discharged with
 --- `VNil: absurd`). Typechecks AND runs (`hnl run` — single-arm match
 --- takes the ctor-object dispatch path).
-export vhead<n, a> : Vec<Succ n, a> ~> a = v ~> match v { VCons(x, xs): x }
+export vhead<n, a> : Vec<Succ n, a> ~> a := v ~> match v { VCons(x, xs): x }
 
-export vtail<n, a> : Vec<n + 1, a> ~> Vec<n, a> = v ~> match v { VCons(x, xs): xs }
+export vtail<n, a> : Vec<n + 1, a> ~> Vec<n, a> := v ~> match v { VCons(x, xs): xs }
 
 --- `vmap` TYPECHECKS the natural dependent form: implicit `<n, a, b>`
 --- binders, `match` refinement (`xs : Vec<?k, a>` under VCons gives
@@ -134,7 +134,7 @@ export vtail<n, a> : Vec<n + 1, a> ~> Vec<n, a> = v ~> match v { VCons(x, xs): x
 --- self-call lowers as unsupported (arrow calculus has no recursion)
 --- and the AST-eval fallback returns the input unchanged — see the gap
 --- log. Kept because the *checking* contract is real.
-export vmap<n, a, b> : (a ~> b) ~> Vec<n, a> ~> Vec<n, b> =
+export vmap<n, a, b> : (a ~> b) ~> Vec<n, a> ~> Vec<n, b> :=
   f ~> v ~> match v {
     VNil: VNil,
     VCons(x, xs): VCons(f(x), vmap(f)(xs))
@@ -142,17 +142,17 @@ export vmap<n, a, b> : (a ~> b) ~> Vec<n, a> ~> Vec<n, b> =
 
 --- Same check-vs-run split for a fold: `vsum` checks (VNil → Zero,
 --- VCons → Succ of the recursive sum) but runs to `Zero`.
-export vsum<n> : Vec<n, Nat> ~> Nat =
+export vsum<n> : Vec<n, Nat> ~> Nat :=
   v ~> match v { VNil: Zero, VCons(x, xs): Succ(vsum(xs)) }
 
 -- ------------------------------------------------------------------------
 -- Maybe — total ops (parameterized family; see match caveats above)
 -- ------------------------------------------------------------------------
 
-export mmap<a, b> : (a ~> b) ~> Maybe(a) ~> Maybe(b) =
+export mmap<a, b> : (a ~> b) ~> Maybe(a) ~> Maybe(b) :=
   f ~> m ~> match m { Nothing: Nothing, Just(x): Just(f(x)) }
 
-export mget<a> : Maybe(a) ~> a ~> a =
+export mget<a> : Maybe(a) ~> a ~> a :=
   m ~> d ~> match m { Nothing: d, Just(x): x }
 
 -- ------------------------------------------------------------------------
@@ -166,7 +166,7 @@ export mget<a> : Maybe(a) ~> a ~> a =
 --- binds `m` as a rigid index var (`var{m}`) and `ys` at
 --- `Vec(var{m}, a)`, so the repack `[Succ(m), VCons(x, ys)]` solves
 --- `?k := var{m}` in `Vec(?k + 1, a) ≡ Vec(m + 1, a)`.
-export filter<n, a> : (a ~> Bool) ~> Vec<n, a> ~> Sigma(Nat, m ~> Vec(m, a)) =
+export filter<n, a> : (a ~> Bool) ~> Vec<n, a> ~> Sigma(Nat, m ~> Vec(m, a)) :=
   f ~> v ~> match v {
     VNil: [Zero, VNil],
     VCons(x, xs): match filter(f)(xs) {
@@ -181,7 +181,7 @@ export filter<n, a> : (a ~> Bool) ~> Vec<n, a> ~> Sigma(Nat, m ~> Vec(m, a)) =
 --- RUNTIME CAVEAT: same check-vs-run split as `vmap`/`vsum` — the
 --- self-recursive call checks cleanly but the tree-walk eval can't
 --- apply it correctly today.
-export zipWith<n, a, b, c> : (a ~> b ~> c) ~> Vec<n, a> ~> Vec<n, b> ~> Vec<n, c> =
+export zipWith<n, a, b, c> : (a ~> b ~> c) ~> Vec<n, a> ~> Vec<n, b> ~> Vec<n, c> :=
   f ~> xs ~> ys ~> match xs {
     VNil: VNil,
     VCons(x, t): match ys { VNil: VNil, VCons(y, u): VCons(f(x)(y), zipWith(f)(t)(u)) }
@@ -195,7 +195,7 @@ export zipWith<n, a, b, c> : (a ~> b ~> c) ~> Vec<n, a> ~> Vec<n, b> ~> Vec<n, c
 --- `eqv(Zero)` resolves the `Eq(Nat)` instance with no explicit dict
 --- argument. The dict's method is reached by matching `mkEq(f)` — see
 --- the `Eq` comment above for why `ev.eq` doesn't work.
-export eqv<a, ev : Eq(a)> : a ~> a ~> Bool = x ~> y ~> match ev { mkEq(f): f(x, y) }
+export eqv<a, ev : Eq(a)> : a ~> a ~> Bool := x ~> y ~> match ev { mkEq(f): f(x, y) }
 
 -- ------------------------------------------------------------------------
 -- Effects — IO<sig> signatures (ADR-0153 §4)
@@ -205,14 +205,14 @@ export eqv<a, ev : Eq(a)> : a ~> a ~> Bool = x ~> y ~> match ev { mkEq(f): f(x, 
 --- form — a signature-only operation still needs a body, so these are
 --- self-referencing stubs (they typecheck; applying them diverges).
 --- A `builtin`/`extern` surface for op declarations is a phase-4 item.
-export readFile : Str ~> IO<{ fs }> = p ~> readFile(p)
-export printLn : Str ~> IO<{ puts }> = s ~> printLn(s)
+export readFile : Str ~> IO<{ fs }> := p ~> readFile(p)
+export printLn : Str ~> IO<{ puts }> := s ~> printLn(s)
 
 --- Handling discharges ops: a covering impl replaces the op's sig entry
 --- with the impl's return type (`IO<{ puts: Unit }>` — `puts` is handled,
 --- nothing residual). Check-side only: calling the stubs diverges.
-puts_handler : (Str ~> Unit) ~> Unit = req ~> req("handled")
-handled_printLn : Str ~> IO<{ puts: Unit }> = handle printLn with { puts: puts_handler }
+puts_handler : (Str ~> Unit) ~> Unit := req ~> req("handled")
+handled_printLn : Str ~> IO<{ puts: Unit }> := handle printLn with { puts: puts_handler }
 
 -- ------------------------------------------------------------------------
 -- forall — explicit-Pi alias (type-level quantification)
@@ -220,7 +220,7 @@ handled_printLn : Str ~> IO<{ puts: Unit }> = handle printLn with { puts: puts_h
 
 --- `Forall(K, x ~> B)` is the explicit-Pi spelling; `forall a. …`
 --- dot-syntax does NOT parse (phase-4 sugar candidate).
-export forall_id : Forall(Nat, n ~> Nat) = n ~> n
+export forall_id : Forall(Nat, n ~> Nat) := n ~> n
 
 -- ------------------------------------------------------------------------
 -- Fails-to-write (documented in the header comment; kept as text so the
@@ -248,6 +248,6 @@ export forall_id : Forall(Nat, n ~> Nat) = n ~> n
 -- the IO stubs diverge. All check-side clean.
 -- ------------------------------------------------------------------------
 
-smoke_vec : Vec<2, Bool> = VCons(true, VCons(false, VNil))
-smoke_head : Bool = vhead(smoke_vec)
-smoke_tail : Vec<1, Bool> = vtail(smoke_vec)
+smoke_vec : Vec<2, Bool> := VCons(true, VCons(false, VNil))
+smoke_head : Bool := vhead(smoke_vec)
+smoke_tail : Vec<1, Bool> := vtail(smoke_vec)

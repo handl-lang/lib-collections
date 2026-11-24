@@ -16,8 +16,8 @@ export unzip<A, B>: List(Pair(A, B)) ~[1]~> Pair(List(A), List(B)) := (xs) ~> do
     do {
       match x {
         [f, s, ...rest]: do {
-          fs = [f, ...fs];
-          gs = [s, ...gs]
+          fs := [f, ...fs];
+          gs := [s, ...gs]
         },
         _: null
       }
