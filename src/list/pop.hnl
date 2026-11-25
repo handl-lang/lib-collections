@@ -8,7 +8,7 @@
 --- -- => [2, 3]
 ---
 -- TODO(n-dim): effect row
-export pop<T>: List(T) ~[1]~> List(T) := xs ~> match xs {
+export pop<T>: List(T) ~>[1] List(T) := xs ~> match xs {
   []: error.raise("collection is empty"),
   [h, ...t]: t
 }
