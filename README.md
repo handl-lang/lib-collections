@@ -16,7 +16,7 @@ vendored path — the `handl-lib-collections` const crate is retired.
 src/                     the .hnl source tree
 pkg.hnl                  package manifest
 scripts/hnl-gate.sh      the gate
-ci.sh                    bupha entry
+workflows/gate.yaml                    bupha entry (handl-gates)
 ```
 
 ## Gate
