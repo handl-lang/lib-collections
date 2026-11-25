@@ -1,0 +1,27 @@
+# lib-collections atom spec (P-013/T-151) — `hash_set.*` atoms.
+#
+# Every `hash_set` op stays native (see src/hash_set.hnl): membership is
+# keyed on a *serialized* value (`value_key`), which distinguishes `1`
+# from `1.0` — a pure-handl port would change dedup semantics on mixed
+# int/float inputs, and `unique_by` takes an arrow argument that cannot
+# cross the `HandlFunction` boundary. The IDL: name = dispatch key,
+# sig = handl signature (~> canonical, from the stripped `op` decls),
+# impl = key into `ops::collections::hash_set_impls` (host `Function`s
+# in plugin-lib-stdlib `ops/collections/hash_set.rs`).
+module: hash_set
+atoms:
+  - { name: hash_set.new, sig: "_ ~> Array", impl: hash_set_new }
+  - { name: hash_set.from, sig: "Array ~> Array", impl: hash_set_from }
+  - { name: hash_set.to_array, sig: "Array ~> Array", impl: hash_set_to_array }
+  - { name: hash_set.len, sig: "Array ~> Number", impl: hash_set_len }
+  - { name: hash_set.is_empty, sig: "Array ~> Bool", impl: hash_set_is_empty }
+  - { name: hash_set.add, sig: "(Array * Value) ~> Array", impl: hash_set_add }
+  - { name: hash_set.remove, sig: "(Array * Value) ~> Array", impl: hash_set_remove }
+  - { name: hash_set.has, sig: "(Array * Value) ~> Bool", impl: hash_set_has }
+  - { name: hash_set.union, sig: "(Array * Array) ~> Array", impl: hash_set_union }
+  - { name: hash_set.intersection, sig: "(Array * Array) ~> Array", impl: hash_set_intersection }
+  - { name: hash_set.difference, sig: "(Array * Array) ~> Array", impl: hash_set_difference }
+  - { name: hash_set.unique, sig: "Array ~> Array", impl: hash_set_unique }
+  - { name: hash_set.symmetric_difference, sig: "(Array * Array) ~> Array", impl: hash_set_symmetric_difference }
+  - { name: hash_set.without, sig: "(Array * Value...) ~> Array", impl: hash_set_without }
+  - { name: hash_set.unique_by, sig: "(Array * Fn) ~> Array", impl: hash_set_unique_by }
