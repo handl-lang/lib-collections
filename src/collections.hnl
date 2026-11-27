@@ -1,18 +1,19 @@
 --- collections — length-indexed vectors, lists, and optionals on the
 --- phase-3 unified type system.
 ---
---- Dogfood module for ADR-0106/0152/0153/0154: indexed `data` families,
+--- Dogfood module for ADR-0106/0152/0153/0154: indexed inductive families,
 --- implicit `<…>` index binders, dependent `match` elimination,
 --- `Sigma`-encoded existentials, `IO<sig>` effect signatures, and
 --- `instance` evidence. Written as a real library, not a test sketch.
 ---
 --- Verified surface (`hnl typecheck src/collections.hnl` — clean):
 ---
----   data Maybe(a) :: Nothing | Just(x : a)
----   data Nat :: Zero | Succ(pred : Nat)
----   data Vec(n : Nat, a : Type) :: VNil : Vec(0, a)
----                                 | VCons(x : a, xs : Vec(n, a)) : Vec(n + 1, a)
----   data List(a : Type) :: LNil | LCons(h : a, t : List(a))
+---   Maybe(a) := new Inductive { Nothing : Maybe(a), Just : (x : a) ~> Maybe(a) }
+---   Nat := new Inductive { Zero : Nat, Succ : (pred : Nat) ~> Nat }
+---   Vec(n : Nat, a : Type) := new Inductive {
+---     VNil : Vec(0, a), VCons : (x : a, xs : Vec(n, a)) ~> Vec(n + 1, a) }
+---   List(a : Type) := new Inductive {
+---     LNil : List(a), LCons : (h : a, t : List(a)) ~> List(a) }
 ---
 --- KNOWN GAPS (see /tmp/dogfood-report.md + host/project/design/
 --- phase3-typesystem-spec.md progress log for the full writeup):
@@ -29,7 +30,7 @@
 ---     `(v : Vec(n, a))` under `f<n, a>` reads `n`/`a` as rigid index
 ---     vars, not unsolved sort metas.
 ---   * FIXED — `F.rec` is visible to the checker: `field_access` on a
----     `data` family resolves the `<F>.rec` scope binding; the
+---     inductive family resolves the `<F>.rec` scope binding; the
 ---     eliminator checks `motive ~> c0.. ~> indices.. ~> F ~> ?mo`.
 ---   * FIXED — `zipWith`'s catch-22 is gone: a decided-impossible arm
 ---     now *auto-discharges* (coverage never required it, `absurd` not
@@ -68,7 +69,7 @@
 ---     polymorphic function over `Vec<n, a>` can be checked OR run
 ---     correctly, not both.
 ---   * A constructor named `J` is unwritable — `J` is the J-eliminator
----     keyword; `data Opt :: N | J(x : a)` errors with the unhelpful
+---     keyword; `Opt := new Inductive { N : Opt, J : (x : a) ~> Opt }` with a ctor named `J` errors with the unhelpful
 ---     "expected separator token.comma" (no "reserved keyword" hint).
 
 -- ------------------------------------------------------------------------
@@ -236,7 +237,8 @@ export forall_id : Forall(Nat, n ~> Nat) := n ~> n
 --
 --   filter<a> : (a ~> Bool) ~> Vec<n, a> ~> Vec<?m, a>   -- `?m` doesn't lex
 --   Vec.rec(null, z, s)(n, a, v)                        -- `record_field_type` error
---   data Vec(n : Nat, a : Type) :: VNil | VCons(k : Nat, x : a, xs : Vec(k, a))
+--   Vec(n : Nat, a : Type) := new Inductive { VNil : Vec(0, a),
+--     VCons : (k : Nat, x : a, xs : Vec(k, a)) ~> Vec(k + 1, a) }
 --                                                     -- un-annotated result index is unsound
 
 -- ------------------------------------------------------------------------
