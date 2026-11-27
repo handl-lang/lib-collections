@@ -75,12 +75,12 @@
 -- Types
 -- ------------------------------------------------------------------------
 
-Maybe<a> := {
+Maybe<a> := new Inductive {
   Nothing : Maybe,
   Just : (x : a) ~> Maybe
 }
 
-Nat := {
+Nat := new Inductive {
   Zero : Nat,
   Succ : (pred : Nat) ~> Nat
 }
@@ -88,12 +88,12 @@ Nat := {
 --- The length index is a Nat *sort* (literal/arithmetized) — `Succ`-form
 --- indices (`Vec<Succ n, a>`) read through the WS-D ctor-projection
 --- bridge and are definitionally `n + 1`.
-Vec<n : Nat, a : Type> := {
+Vec<n : Nat, a : Type> := new Inductive {
   VNil : Vec(0, a),
   VCons : (x : a, xs : Vec(n, a)) ~> Vec(n + 1, a)
 }
 
-List<a : Type> := {
+List<a : Type> := new Inductive {
   LNil : List,
   LCons : (h : a, t : List(a)) ~> List
 }
@@ -105,7 +105,7 @@ List<a : Type> := {
 --- dictionary — `ev.eq` field access does NOT typecheck (the binder's
 --- type is the `Eq(a)` former-app, not a record — `record_field_type`
 --- error), so `match ev { mkEq(f): … }` is the call convention.
-Eq<a : Type> := {
+Eq<a : Type> := new Inductive {
   mkEq : (f : a ~> a ~> Bool) ~> Eq
 }
 
